@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GitHub implements Serializable{
+public class GitHub implements Serializable {
 
     @SerializedName("sha")
     @Expose

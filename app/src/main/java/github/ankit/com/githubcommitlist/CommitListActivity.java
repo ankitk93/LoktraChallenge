@@ -1,6 +1,7 @@
 package github.ankit.com.githubcommitlist;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import retrofit.client.Response;
 import retrofit.http.GET;
 
 public class CommitListActivity extends AppCompatActivity {
+
+
 
     private ListView list;
     public List<GitHub> gitHubList = new ArrayList<>();
@@ -39,6 +43,16 @@ public class CommitListActivity extends AppCompatActivity {
         list = (ListView) findViewById(R.id.list);
         listAdapter = new ListAdapter(CommitListActivity.this,gitHubList);
         list.setAdapter(listAdapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                GitHub gitHub = (GitHub) adapterView.getAdapter().getItem(i);
+                Intent intent = new Intent(CommitListActivity.this, DetailActivity.class);
+                intent.putExtra(DetailActivity.INTENT_DETAIL, gitHub);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getGitCommits() {
@@ -47,6 +61,7 @@ public class CommitListActivity extends AppCompatActivity {
         RestAdapter adapter = new RestAdapter.Builder().setEndpoint(url).build();
         //Creating Rest Services
         GetCommit getCommit = adapter.create(GetCommit.class);
+
         getCommit.getLatestCommits(new Callback<List<GitHub>>() {
             @Override
             public void success(List<GitHub> gitHubs, Response response) {
